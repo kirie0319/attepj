@@ -1,0 +1,114 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 30px 0 30px 60px;
+}
+
+.header-list {
+    display: flex;
+    padding-top: 40px;
+}
+
+.header-list-item {
+    font-size: 18px;
+    margin-right: 40px;
+    font-weight: bold;
+}
+
+.main {
+    background-color: #eeeeee;
+    height: 85vh;
+}
+
+.footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.copyright {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.attendance-title {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.attendance-container {
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.attendance-card {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #fff;
+    width: 45%;
+    height: 15vh;
+    margin-bottom: 4vh;
+}
+
+.attendance-txt {
+    margin-top: 20%;
+}
+
+.right {
+    margin-left: 5%;
+}
+
+.login-title {
+    font-size: 26px;
+    text-align: center;
+    padding-top: 6%;
+    margin-bottom: 3vh;
+    font-weight: bold;
+}
+
+.login-input {
+    display: block;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 13px 0 13px 10px;
+    width: 30%;
+    margin: 0 auto;
+    margin-bottom: 35px;
+}
+
+.login-button {
+    display: block;
+    width: 30%;
+    border-radius: 4px;
+    background-color: blue;
+    color: #fff;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 22px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.login-small {
+    text-align: center;
+    margin-top: 35px;
+    font-size: 14px;
+}
+
+.to-register {
+    display: block;
+    color: blue;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+}

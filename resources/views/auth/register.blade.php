@@ -1,3 +1,4 @@
+<!-- 会員登録ページ -->
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">

@@ -18,9 +18,9 @@ class RegisteredUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function index()
     {
-        return view('auth.register');
+        return view('register');
     }
 
     /**
@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -49,6 +49,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return view('/login');
     }
 }
