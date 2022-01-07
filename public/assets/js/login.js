@@ -7,5 +7,6 @@
     window.sessionStorage.setItem('refreshStartStatus', 'inactive');
     window.sessionStorage.setItem('refreshEndStatus', 'inactive');
     window.sessionStorage.removeItem('workingTime');
+    window.sessionStorage.removeItem('refreshTime');
   });
 }

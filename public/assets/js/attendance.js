@@ -9,6 +9,8 @@
   let workingTime;
   let refreshTime;
   
+  let nDate;
+
   let attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
   let attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
   let refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
@@ -79,14 +81,18 @@
   
   attendanceEnd.addEventListener('click', () => {
     if (attendanceEndStatus === 'active') {
+      if (refreshTime) {
+        let totalWork = workingTime - refreshTime;
+        attendanceTime.value = totalWork;
+      } else {
+        attendanceTime.value = workingTime;
+      }
       elapsedTime += Date.now() - startingTime;
       clearTimeout(timerId);
-      window.sessionStorage.setItem('workingTime', workingTime);
       let endingTime = new Date;
       formatTime(startingTime, start);
       formatTime(endingTime, end);
       formatDate(startingTime, date);
-      attendanceTime.value = window.sessionStorage.getItem('workingTime');
       window.sessionStorage.removeItem('attendanceStartStatus');
       window.sessionStorage.removeItem('attendanceEndStatus');
       window.sessionStorage.removeItem('refreshStartStatus');
@@ -138,8 +144,6 @@
       refreshElapsedTime += Date.now() - refreshStartingTime;
       clearTimeout(refreshTimerId);
       window.sessionStorage.setItem('refreshTime', refreshTime);
-      let test = window.sessionStorage.getItem('refreshTime');
-      console.log(test);
       refresh.value = window.sessionStorage.getItem('refreshTime');
       window.sessionStorage.removeItem('attendanceStartStatus');
       window.sessionStorage.removeItem('attendanceEndStatus');
@@ -157,7 +161,6 @@
       setButtonStatus(attendanceEnd, attendanceEndStatus);
       setButtonStatus(refreshStart, refreshStartStatus);
       setButtonStatus(refreshEnd, refreshEndStatus);
-      startingTime = new Date;
       updateAttendanceTime();
     } else {
       return;
@@ -169,7 +172,8 @@
   function updateAttendanceTime() {
     timerId = setTimeout(() => {
       let t = Date.now() - startingTime + elapsedTime;
-      workingTime = t;
+      window.sessionStorage.setItem('workingTime', t);
+      workingTime = window.sessionStorage.getItem('workingTime');
       updateAttendanceTime();
     }, 10);
   }
@@ -181,4 +185,33 @@
       updateRefreshTime();
     }, 10);
   }
+
+  function check() {
+    let pDate = startingTime.getDate();
+    nDate = new Date().getDate();
+    if (pDate != nDate) {
+      window.sessionStorage.removeItem('workingTime');
+      window.sessionStorage.removeItem('refreshTime');
+      window.sessionStorage.removeItem('attendanceStartStatus');
+      window.sessionStorage.removeItem('attendanceEndStatus');
+      window.sessionStorage.removeItem('refreshStartStatus');
+      window.sessionStorage.removeItem('refreshEndStatus');
+      window.sessionStorage.setItem('attendanceStartStatus', 'active');
+      window.sessionStorage.setItem('attendanceEndStatus', 'inactive');
+      window.sessionStorage.setItem('refreshStartStatus', 'inactive');
+      window.sessionStorage.setItem('refreshEndStatus', 'inactive');
+      attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
+      attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
+      refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
+      refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+      setButtonStatus(attendanceStart, attendanceStartStatus);
+      setButtonStatus(attendanceEnd, attendanceEndStatus);
+      setButtonStatus(refreshStart, refreshStartStatus);
+      setButtonStatus(refreshEnd, refreshEndStatus);
+    } else {
+      console.log('test2');
+    }
+  }
+
+  setInterval(check, 1000);
 }
