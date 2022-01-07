@@ -113,10 +113,11 @@
     margin-top: 5px;
 }
 
-.btn.active {
+.active {
     opacity: 1;
 }
-.btn.inactive {
+
+.inactive {
     opacity: 0.5;
 }
 

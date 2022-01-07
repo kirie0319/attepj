@@ -6,26 +6,14 @@
   let refreshTimerId;
   let elapsedTime = 0;
   let refreshElapsedTime = 0;
-  let isRunnning = false;
-  let refreshIsRunnning = false;
   let workingTime;
   let refreshTime;
   
-  window.sessionStorage.setItem('attendanceStartStatus', true);
-  window.sessionStorage.setItem('attendanceEndStatus', false);
-  window.sessionStorage.setItem('refreshStartStatus', false);
-  window.sessionStorage.setItem('refreshEndStatus', false);
-  
   let attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
   let attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
-  let refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
   let refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
-
-  console.log(attendanceEndStatus);
-  console.log(attendanceStartStatus);
-  console.log(refreshStartStatus);
-  console.log(refreshEndStatus);
-
+  let refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+  
   let attendanceStart = document.getElementById('attendance-start');
   let attendanceEnd = document.getElementById('attendance-end');
   let date = document.getElementById('date');
@@ -35,14 +23,14 @@
   let end = document.getElementById('end_time');
   let refresh = document.getElementById('refresh_time');
   let attendanceTime = document.getElementById('attendance_time');
-
+  
   function formatDate(dt, text) {
     var y = dt.getFullYear();
     var m = ('00' + (dt.getMonth()+1)).slice(-2);
     var d = ('00' + dt.getDate()).slice(-2);
     text.value = (y + '-' + m + '-' + d);
   }
-
+  
   function formatTime(time, text) {
     let h = time.getHours();
     let i = ('00' + (time.getMinutes())).slice(-2);
@@ -50,60 +38,130 @@
     text.value = (h + ':' + i + ':' + s);
   }
 
-
-  function setButtonStatus(start, stop, r_start, r_end) {
-    attendanceStart.className = start ? 'active' : 'inactive';
-    attendanceEnd.className = stop ? 'active' : 'inactive';
-    refreshStart.className = r_start ? 'active' : 'inactive';
-    refreshEnd.className = r_end ? 'active' : 'inactive';
-  };
-
-  setButtonStatus(attendanceStartStatus, attendanceEndStatus, refreshStartStatus, refreshEndStatus);
-
-  function attendanceWork() {
-    startingTime = new Date;
-    updateAttendanceTime();
-    setButtonStatus(false, true, true, false);
+  function setButtonStatus(btn, status) {
+    if (status === 'active') {
+      btn.classList.remove('inactive');
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+      btn.classList.add('inactive');
+    }
   }
   
+  setButtonStatus(attendanceStart, attendanceStartStatus);
+  setButtonStatus(attendanceEnd, attendanceEndStatus);
+  setButtonStatus(refreshStart, refreshStartStatus);
+  setButtonStatus(refreshEnd, refreshEndStatus);
+  
   attendanceStart.addEventListener('click', () => {
-    if (isRunnning) return;
-    isRunnning = true;
-    window.sessionStorage.removeItem('workingTime');
-    attendanceWork();
+    if (attendanceStartStatus === 'active') {
+      window.sessionStorage.removeItem('attendanceStartStatus');
+      window.sessionStorage.removeItem('attendanceEndStatus');
+      window.sessionStorage.removeItem('refreshStartStatus');
+      window.sessionStorage.setItem('attendanceStartStatus', 'inactive');
+      window.sessionStorage.setItem('attendanceEndStatus', 'active');
+      window.sessionStorage.setItem('refreshStartStatus', 'active');
+      attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
+      attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
+      refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
+      refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+      setButtonStatus(attendanceStart, attendanceStartStatus);
+      setButtonStatus(attendanceEnd, attendanceEndStatus);
+      setButtonStatus(refreshStart, refreshStartStatus);
+      setButtonStatus(refreshEnd, refreshEndStatus);
+      startingTime = new Date;
+      updateAttendanceTime();
+    } else {
+      return;
+    }
+    
   });
-
+  
   attendanceEnd.addEventListener('click', () => {
-    if (!isRunnning) return;
-    isRunnning = false;
-    elapsedTime += Date.now() - startingTime;
-    clearTimeout(timerId);
-    window.sessionStorage.setItem('workingTime', workingTime);
-    let endingTime = new Date;
-    formatTime(startingTime, start);
-    formatTime(endingTime, end);
-    formatDate(startingTime, date);
-    attendanceTime.value = window.sessionStorage.getItem('workingTime');
-    setButtonStatus(true, false, false, false);
+    if (attendanceEndStatus === 'active') {
+      elapsedTime += Date.now() - startingTime;
+      clearTimeout(timerId);
+      window.sessionStorage.setItem('workingTime', workingTime);
+      let endingTime = new Date;
+      formatTime(startingTime, start);
+      formatTime(endingTime, end);
+      formatDate(startingTime, date);
+      attendanceTime.value = window.sessionStorage.getItem('workingTime');
+      window.sessionStorage.removeItem('attendanceStartStatus');
+      window.sessionStorage.removeItem('attendanceEndStatus');
+      window.sessionStorage.removeItem('refreshStartStatus');
+      window.sessionStorage.removeItem('refreshEndStatus');
+      window.sessionStorage.setItem('attendanceStartStatus', 'active');
+      window.sessionStorage.setItem('attendanceEndStatus', 'inactive');
+      window.sessionStorage.setItem('refreshStartStatus', 'inactive');
+      window.sessionStorage.setItem('refreshEndStatus', 'inactive');
+      attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
+      attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
+      refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
+      refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+      setButtonStatus(attendanceStart, attendanceStartStatus);
+      setButtonStatus(attendanceEnd, attendanceEndStatus);
+      setButtonStatus(refreshStart, refreshStartStatus);
+      setButtonStatus(refreshEnd, refreshEndStatus);
+    } else {
+      return;
+    }
   });
   
   refreshStart.addEventListener('click', () => {
-    if (refreshIsRunnning) return;
-    refreshIsRunnning = true;
-    refreshStartingTime = new Date;
-    updateRefreshTime();
-    setButtonStatus(false, true, false, true);
+    if (refreshStartStatus === 'active') {
+      refreshStartingTime = new Date;
+      updateRefreshTime();
+      window.sessionStorage.removeItem('attendanceStartStatus');
+      window.sessionStorage.removeItem('attendanceEndStatus');
+      window.sessionStorage.removeItem('refreshStartStatus');
+      window.sessionStorage.removeItem('refreshEndStatus');
+      window.sessionStorage.setItem('attendanceStartStatus', 'inacitve');
+      window.sessionStorage.setItem('attendanceEndStatus', 'active');
+      window.sessionStorage.setItem('refreshStartStatus', 'inactive');
+      window.sessionStorage.setItem('refreshEndStatus', 'active');
+      attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
+      attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
+      refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
+      refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+      setButtonStatus(attendanceStart, attendanceStartStatus);
+      setButtonStatus(attendanceEnd, attendanceEndStatus);
+      setButtonStatus(refreshStart, refreshStartStatus);
+      setButtonStatus(refreshEnd, refreshEndStatus);
+    } else {
+      return;
+    }
   });
   
   refreshEnd.addEventListener('click', () => {
-    if (!refreshIsRunnning) return;
-    refreshIsRunnning = false;
-    refreshElapsedTime += Date.now() - refreshStartingTime;
-    clearTimeout(refreshTimerId);
-    window.sessionStorage.setItem('refreshTime', refreshTime);
-    refresh.value = window.sessionStorage.getItem('refreshTime');
-    setButtonStatus(false, true, true, false);
-    attendanceWork();
+    if (refreshEndStatus === 'active') {
+      refreshElapsedTime += Date.now() - refreshStartingTime;
+      clearTimeout(refreshTimerId);
+      window.sessionStorage.setItem('refreshTime', refreshTime);
+      let test = window.sessionStorage.getItem('refreshTime');
+      console.log(test);
+      refresh.value = window.sessionStorage.getItem('refreshTime');
+      window.sessionStorage.removeItem('attendanceStartStatus');
+      window.sessionStorage.removeItem('attendanceEndStatus');
+      window.sessionStorage.removeItem('refreshStartStatus');
+      window.sessionStorage.removeItem('refreshEndStatus');
+      window.sessionStorage.setItem('attendanceStartStatus', 'inacitve');
+      window.sessionStorage.setItem('attendanceEndStatus', 'active');
+      window.sessionStorage.setItem('refreshStartStatus', 'active');
+      window.sessionStorage.setItem('refreshEndStatus', 'inactive');
+      attendanceStartStatus = window.sessionStorage.getItem('attendanceStartStatus');
+      attendanceEndStatus = window.sessionStorage.getItem('attendanceEndStatus');
+      refreshStartStatus = window.sessionStorage.getItem('refreshStartStatus');
+      refreshEndStatus = window.sessionStorage.getItem('refreshEndStatus');
+      setButtonStatus(attendanceStart, attendanceStartStatus);
+      setButtonStatus(attendanceEnd, attendanceEndStatus);
+      setButtonStatus(refreshStart, refreshStartStatus);
+      setButtonStatus(refreshEnd, refreshEndStatus);
+      startingTime = new Date;
+      updateAttendanceTime();
+    } else {
+      return;
+    }
   });
 
   
