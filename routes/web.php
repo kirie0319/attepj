@@ -31,6 +31,9 @@ Route::post('/login', [AuthenticatedSessionController::class, 'login']);
 Route::get('/register', [RegisteredUserController::class, 'index']);
 Route::post('/register', [RegisteredUserController::class, 'register']);
 Route::get('/attendance', [AttendanceController::class, 'index']);
+Route::post('/attendance_finish', [AttendanceController::class, 'attendance_finish']);
+Route::post('/attendance_previous', [AttendanceController::class, 'previous']);
+Route::post('/attendance_next', [AttendanceController::class, 'next']);
 
 // Route::get('/', function () {
 //     return view('welcome');
